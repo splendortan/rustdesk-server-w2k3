@@ -1,5 +1,5 @@
 # RustDesk Server 适配Windows Server 2003的编译配置
-name: Build RustDesk Server for Windows 2003
+name: build
 
 permissions:
   contents: read
@@ -12,8 +12,7 @@ on:
 env:
   CARGO_TERM_COLOR: always
   LATEST_TAG: latest
-  GHCR_IMAGE: ghcr.io/rustdesk/rustdesk-server-s6
-  GHCR_IMAGE_CLASSIC: ghcr.io/rustdesk/rustdesk-server
+ 
 
 jobs:
 
@@ -57,7 +56,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 13
+          node-version: 16
 
       - name: Sign exe files
         uses: GermanBluefox/code-sign-action@v7
@@ -99,7 +98,7 @@ jobs:
           recursive: false
 
       - name: Publish Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: binaries-windows-x86_64
           path: |
@@ -115,7 +114,7 @@ jobs:
     name: Github release
     needs: 
       - build-win
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
@@ -125,7 +124,7 @@ jobs:
     steps:
 
       - name: Download binaries (${{ matrix.job.os }} - ${{ matrix.job.name }})
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v3
         with:
           name: binaries-${{ matrix.job.os }}-${{ matrix.job.name }}
           path: ${{ matrix.job.name }}
